@@ -2,7 +2,17 @@
 
 只同步 OpenCode 的插件列表和 MCP 服务定义。配置模板中的 `{{变量名}}` 由 PowerShell 脚本逐项询问、替换；不需要设置环境变量。
 
-## 使用
+## 让 AI 帮你完成
+
+在家里电脑的 AI 编程助手中，粘贴下面这段提示词（需要具备本机文件、终端和联网能力）：
+
+```text
+请在这台 Windows 电脑上，按 git@github.com:kiritoxjf/opencode-config.git 仓库中的 AI_SETUP.md 实际完成 OpenCode 插件和 MCP 配置。请先克隆或更新仓库，再阅读并执行该文件；自动查找本机路径、补齐官方依赖、备份并应用配置、验证加载和连接。不要只给教程，也不要将路径或 Token 设置为系统环境变量。缺少 Token 时让我在本机隐藏输入，需要登录或配对时再让我操作；保留其他 OpenCode 设置，不要提交本机配置或凭据。
+```
+
+详细步骤见 [AI_SETUP.md](AI_SETUP.md)。若仓库是私有的，AI 所在电脑需要先获得 GitHub 仓库访问权限。
+
+## 手动运行脚本
 
 先在本机安装对应的软件：OpenCode、browse、微信开发者工具、Worktrunk 和 Codebase Memory。此仓库同步配置，不安装这些本地程序。
 

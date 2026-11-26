@@ -20,24 +20,33 @@
 请按以下步骤完成：
 
 1. 准备仓库并确认配置规则
+   - 不要假设本机已安装 Git、OpenCode、browse、微信开发者工具、Worktrunk 或 Codebase Memory；从零安装和只缺部分程序都需要支持。
+   - 先检查 Windows 版本、系统架构、PowerShell 和 Git。Git 未安装时，先从 https://git-scm.com/install/windows 获取适合本机的正式安装包或便携版，完成安装并验证后再克隆；不要用未核实的 winget 包名。Git 已安装但不在 PATH 时，使用找到的绝对路径。
    - 如果仓库已在本机，使用已有目录；有未提交修改时先检查，不能覆盖。工作区干净时可以 git pull --ff-only。
-   - 如果尚未克隆，在合适的用户目录克隆。SSH 未授权时让我完成 GitHub 登录或密钥授权，不要更改仓库可见性或覆盖我的 SSH 配置。
+   - 如果尚未克隆，在合适的用户目录克隆。SSH 未授权时，可使用已登录 GitHub 的 HTTPS 凭据访问；仍无权限时让我完成 GitHub 登录或密钥授权，不要更改仓库可见性或覆盖我的 SSH 配置。
    - 阅读 README.md、setup.ps1、plugins.json、mcp.json、variables.json，以实际文件为准，不要硬编码公司电脑上的用户名、盘符、安装路径或 Token。
    - 读取 OpenCode 当前官方文档 https://opencode.ai/docs/config 和 https://opencode.ai/docs/mcp-servers，核实本机版本和配置位置。此仓库使用 V2 的 plugins 和 mcp.servers；不要顺带迁移其他配置。
    - 确认实际生效的全局配置。默认优先 ~/.config/opencode/opencode.jsonc，其次 opencode.json；若本机已有自定义配置目录，以实际生效位置为准。setup.ps1 支持用 -ConfigPath 指定目标。
 
-2. 自动查找依赖并填写本机变量
-   - 优先使用现有安装和现有配置，结合 Get-Command、常见安装目录、已安装程序信息及软件文档查找；先做有针对性的检查，不要直接递归扫描整个磁盘。
-   - BROWSE_EXE：browse.exe 的真实完整路径。
-   - WECHATIDE_CMD：支持 MCP 的微信开发者工具中 wechatide.cmd 的真实完整路径。
-   - WECHATIDE_MCP_TOKEN：这台电脑微信开发者工具提供的 MCP Token。
-   - WORKTRUNK_BIN：Worktrunk 的 wt.exe 的真实完整路径。
-   - CODEBASE_MEMORY_BIN：codebase-memory-mcp.exe 的真实完整路径。
-   - 验证文件存在，并通过安全的版本或帮助命令确认程序身份。不要启动一个会无限等待的 MCP stdio 服务来当作版本检查。
-   - 缺少程序时，先从相应插件的包元数据、上游仓库或官方文档确认依赖和安装方法，选择适合本机架构的正式版本。不要仅凭同名搜索结果安装软件，也不要猜测下载地址。
-   - 可以自动完成的用户级安装直接完成；必须手动运行安装器、配对浏览器扩展或确认管理员权限时，给我明确的单步操作，完成后继续。
-   - browse 需要检查浏览器扩展和配对状态。微信开发者工具必须确认当前版本支持 wechatide.cmd mcp；仅安装普通开发者工具并不能证明 MCP 可用。
-   - 不要编造路径、Token 或空壳程序，也不要为了通过检查擅自删除插件或 MCP。暂时无法完成的依赖要明确标为待处理，并继续其他独立工作。
+2. 检查依赖，安装缺少的程序，再填写本机变量
+   - 先列出依赖检查表，每项记录「已安装且可用 / 已安装但版本不兼容 / 未安装 / 待用户操作」、版本、路径和准备采用的安装来源。优先复用可用安装，不重复安装，不为本任务升级无关软件。
+   - 逐项检查 plugins.json 中插件的包元数据和官方使用说明，确认是否还有外部 CLI 或运行时依赖；插件包由 OpenCode 加载，外部程序则需要单独安装。缺少某个服务商的登录授权时标记待授权，不要改动我的模型或 provider 配置。
+   - 结合 Get-Command、现有配置、常见安装目录及已安装程序信息查找；先做有针对性的检查，不要直接递归扫描整个磁盘。命令不在 PATH 不等于未安装，可以用绝对路径运行。
+   - OpenCode：若没有安装，从 https://opencode.ai/docs/ 选择 Windows 对应架构的正式 Desktop 安装包或独立 CLI。已经有 Desktop 时不必额外安装 CLI，也不要因为 CLI 不在 PATH 就覆盖现有安装。
+   - Git：用于拉取仓库和 Worktrunk。按步骤 1 安装并验证。
+   - PowerShell：Windows PowerShell 5.1 或 PowerShell 7 均可，不要为了运行 setup.ps1 强制升级到 7。
+   - browse：从 https://opencode.ai/product/browse 核实当前安装方法；需要本机 browse.exe、受支持的 Chromium 浏览器和 browse 扩展。优先复用 Edge/Chrome 等现有浏览器；安装扩展、配对后继续验证。BROWSE_EXE 必须指向真实 browse.exe，不能把 npm 生成的 browse.cmd 当作 exe 填入。
+   - 微信开发者工具：先查明支持 wechatide.cmd mcp 的发行版本和可信安装来源，安装后检查 MCP 功能。不要把名称相近的 CLI 或不支持 MCP 的版本当作已就绪；无法确认支持的发行版时，向我索取下载入口并继续其他独立安装。WECHATIDE_CMD 是实际 wechatide.cmd 完整路径，WECHATIDE_MCP_TOKEN 在安装和登录完成后从本机获取。
+   - Worktrunk：插件 @auron-labs/opencode-worktrunk 不会安装 wt。参考插件上游 https://github.com/auron-labs/opencode-plugins/tree/main/packages/opencode-worktrunk 和 https://worktrunk.dev/ 的 Windows 安装方法；优先采用正式预编译版本，避免为单个工具无必要地安装完整编译环境。WORKTRUNK_BIN 是 Worktrunk 的 wt.exe，注意 Windows Terminal 也有同名 wt.exe，必须用版本或帮助输出区分。
+   - Codebase Memory：插件 @auron-labs/opencode-codebase-memory 不会安装原生程序。参考插件上游 https://github.com/auron-labs/opencode-plugins/tree/main/packages/opencode-codebase-memory 和 https://github.com/DeusData/codebase-memory-mcp 的正式 Windows 发布；CODEBASE_MEMORY_BIN 是原生 codebase-memory-mcp.exe。优先选择仅安装二进制的方式；若使用上游 install.ps1，先核实并使用 --skip-config，避免重复注册 MCP 或安装额外 Skills、hooks。原生版本不应为了安装而额外引入 Docker、Python 或 Node.js。
+   - Figma：模板使用远程 MCP https://mcp.figma.com/mcp，不要求安装 Figma Desktop，安装依赖阶段只需确认可联网，OAuth 按下一步完成。
+   - Node.js/npm、Bun、winget、解压工具等只在选定的官方安装方式明确需要时补装；不要把所有包管理器、语言运行时和编译器都装一遍。Node.js 和 Bun 的官方入口分别为 https://nodejs.org/ 和 https://bun.sh/。先确认目标程序是否可用独立二进制安装。
+   - 对清单中的每个缺失项，先确认官方来源、版本和系统架构，再实际下载、安装到用户可写目录，并重新发现和验证最终路径。已有包管理器可复用；未安装 winget 时直接采用上游安装包或便携版，不把安装 winget 作为前置条件。
+   - 安装器可能顺带注册 AI 客户端或修改配置。安装前先备份已有 OpenCode 配置，优先选择仅安装程序、跳过自动配置的选项；最后统一按本仓库模板配置，不让安装器额外改动 Skills 或其他客户端设置。
+   - 安装后检查退出码、实际文件以及安全的版本或帮助输出。安装命令返回不代表程序可用；当前终端未刷新 PATH 时用最终绝对路径验证。不启动会无限等待的 MCP stdio 服务来做版本检查。
+   - 可以自动完成的用户级安装直接完成；必须手动安装、登录、配对或确认管理员权限时，给出准确的来源、所需操作和完成标准，待我操作后再次检测，从已完成的步骤继续，避免重复下载和安装。
+   - 下载失败时先检查具体网络错误，重试或选择上游正式替代来源；不要擅自更改系统代理、关闭安全软件或安装无法确认来源的替代包。记录失败项并继续其他独立工作。
+   - 不编造路径、Token 或空壳程序，不为通过检查删除插件或 MCP。setup.ps1 的五个变量均为必填；若必需程序或 Token 仍缺失，先不替换真实配置，保留已完成的安装和检查结果，明确阻塞项，解决后再统一应用。
 
 3. 处理 Token 和登录
    - 若本机已配置可用的微信 MCP Token，可在本机程序中复用，不输出原值。
@@ -66,5 +75,5 @@
    - 验证只做只读或无副作用检查；不要为了测试去发布微信小程序、部署云函数、修改 Figma 文件或删除索引。
    - 授权或依赖未完成时，不要声称全部可用。明确区分「配置已写入」「插件已加载」「MCP 已连接」「待用户授权」。
 
-最后简要报告：实际配置路径、备份路径、各插件和 MCP 的验证结果，以及仍需我完成的具体操作。不要显示 Token 或完整敏感配置。
+最后简要报告：已复用或新安装的程序及版本、仍缺失或不兼容的依赖、实际配置路径和备份路径、各插件与 MCP 的验证结果，以及仍需我完成的具体操作。若尚未应用配置，明确说明原因。不要显示 Token 或完整敏感配置。
 ```

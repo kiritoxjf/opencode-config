@@ -1,0 +1,30 @@
+[
+  "@plannotator/opencode",
+  "opencode-dcp",
+  "cursor-opencode-provider",
+  "opencode-token-tracker",
+  "opencode-models-discovery",
+  {
+    "package": "@auron-labs/opencode-improve",
+    "options": {}
+  },
+  {
+    "package": "@capybearista/opencode-adversarial-review",
+    "options": {}
+  },
+  {
+    "package": "@auron-labs/opencode-worktrunk",
+    "options": {
+      "binary": "{{WORKTRUNK_BIN}}"
+    }
+  },
+  {
+    "package": "@auron-labs/opencode-codebase-memory",
+    "options": {
+      "binary": "{{CODEBASE_MEMORY_BIN}}",
+      "enabled": true,
+      "indexOnStartup": true,
+      "indexMode": "full"
+    }
+  }
+]

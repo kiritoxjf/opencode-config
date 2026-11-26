@@ -1,0 +1,38 @@
+{
+  "variables": [
+    {
+      "name": "BROWSE_EXE",
+      "label": "browse 可执行文件的完整路径",
+      "secret": false,
+      "required": true
+    },
+    {
+      "name": "WECHATIDE_CMD",
+      "label": "微信开发者工具 wechatide.cmd 的完整路径",
+      "secret": false,
+      "required": true,
+      "pattern": "^[^\\\"%!^&|<>\\r\\n]+\\.cmd$",
+      "hint": "请粘贴未加引号的 .cmd 文件路径；不支持包含 % ! ^ & | < > 的路径。"
+    },
+    {
+      "name": "WECHATIDE_MCP_TOKEN",
+      "label": "微信开发者工具 MCP Token",
+      "secret": true,
+      "required": true,
+      "pattern": "^[A-Za-z0-9._~+/=-]+$",
+      "hint": "请粘贴开发者工具提供的 Token（字母、数字或 . _ ~ + / = -），不包含空格、引号或命令符号。"
+    },
+    {
+      "name": "WORKTRUNK_BIN",
+      "label": "Worktrunk 可执行文件的完整路径",
+      "secret": false,
+      "required": true
+    },
+    {
+      "name": "CODEBASE_MEMORY_BIN",
+      "label": "Codebase Memory MCP 可执行文件的完整路径",
+      "secret": false,
+      "required": true
+    }
+  ]
+}

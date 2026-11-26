@@ -1,0 +1,29 @@
+{
+  "servers": {
+    "wechat-devtools": {
+      "type": "local",
+      "command": [
+        "cmd.exe",
+        "/d",
+        "/c",
+        "{{WECHATIDE_CMD}}",
+        "mcp",
+        "--token={{WECHATIDE_MCP_TOKEN}}"
+      ]
+    },
+    "browse": {
+      "type": "local",
+      "command": [
+        "{{BROWSE_EXE}}",
+        "mcp"
+      ],
+      "environment": {
+        "OPENCODE_BROWSER_RUNTIME": "auto-update"
+      }
+    },
+    "figma": {
+      "type": "remote",
+      "url": "https://mcp.figma.com/mcp"
+    }
+  }
+}

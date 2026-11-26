@@ -1,0 +1,8 @@
+# Local/runtime files
+*.bak-*
+*.local.json
+*.secret.*
+opencode.json
+opencode.jsonc
+auth.json
+node_modules/
